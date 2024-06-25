@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="hyrobot">
+    <xacro:property name="model_height" value="1.0"/>
+    <xacro:include filename="ur5_xacro/ur_macro.xacro"/>  <!--ur5_xacro-->
+    <xacro:include filename="robotiq_xacro/robotiq_arg2f_85_macro.xacro" />
+
+    <xacro:ur_robot_gazebo 
+        prefix=""
+        joint_limits_parameters_file="$(find hyrobot)/config/urdf_ur5/joint_limits.yaml"
+        kinematics_parameters_file="$(find hyrobot)/config/urdf_ur5/default_kinematics.yaml"
+        physical_parameters_file="$(find hyrobot)/config/urdf_ur5/physical_parameters.yaml"
+        visual_parameters_file="$(find hyrobot)/config/urdf_ur5/visual_parameters.yaml"
+        transmission_hw_interface="hardware_interface/EffortJointInterface"
+        safety_limits="false"
+        safety_pos_margin="0.15"
+        safety_k_position="20"
+    />
+    <link name="world" />
+    <joint name="virtual_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 ${model_height}" />
+        <parent link="world" />
+        <child link="base_link" />
+    </joint>
+    <!--robotiq-->
+    <xacro:robotiq_arg2f_85_gazebo prefix="" transmission_hw_interface="hardware_interface/EffortJointInterface"/>
+    <joint name="ur_robotiq" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="tool0"/>
+        <child link="robotiq_base_link"/>
+    </joint>
+
+    <!--realsense d435-->
+    <xacro:include filename="$(find hyrobot)/urdf/realsense_xacro/depthcam.xacro"/>
+    <xacro:realsense_d435 sensor_name="d435" parent_link="world" rate="10">
+        <origin rpy="0 ${pi/2} 0" xyz="0.5 0 2.2"/>
+    </xacro:realsense_d435>
+
+    <!--objects: if you want to add some cubes or cylinders, you can use this xacro file.-->
+    <xacro:include filename="$(find hyrobot)/urdf/objects_xacro/object_xacro.xacro"/>
+</robot>

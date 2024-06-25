@@ -1,0 +1,6 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="objects">
+    <!--include all objects in simulation-->
+    <xacro:include filename="$(find hyrobot)/urdf/objects_xacro/desktop_xacro.xacro"/>
+
+    <xacro:add_desktop ground_height="${model_height}" desktop_length="2.0" desktop_width="1.5"/>
+</robot>

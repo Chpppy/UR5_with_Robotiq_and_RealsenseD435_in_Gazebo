@@ -1,0 +1,43 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="desktop">
+    <xacro:include filename="$(find hyrobot)/urdf/objects_xacro/calc_inertial.xacro"/>
+    <xacro:property name="desktop_height" value="0.02"/>
+    <xacro:property name="desktop_mass" value="1.0"/>
+
+    <xacro:include filename="$(find hyrobot)/urdf/objects_xacro/desktop_leg_xacro.xacro"/>
+
+    <xacro:macro name="add_desktop" params="ground_height desktop_length desktop_width">
+        <link name="desk_square">
+            <xacro:box_inertial m="${desktop_mass}" x="${desktop_length}" y="${desktop_width}" z="${desktop_height}"/>
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <box size="${desktop_length} ${desktop_width} ${desktop_height}"/>
+                </geometry>
+                <material name="white">
+                    <color rgba="1.0 1.0 1.0 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <box size="${desktop_length} ${desktop_width} ${desktop_height}"/>
+                </geometry>
+            </collision>
+        </link>
+        <gazebo reference="desk_square">
+            <material>
+                Gazebo/White
+            </material>
+        </gazebo>
+        <joint name="desk2world" type="fixed">  <!--box central height = ${ground_height - desktop_height/2}-->
+            <origin xyz="${desktop_length/2 - 0.2} 0.0 ${ground_height - desktop_height/2}" rpy="0.0 0.0 0.0"/>
+            <parent link="world"/>
+            <child link="desk_square"/>
+        </joint>
+
+        <xacro:add_desk_legs name="lu" flag_x="1.0" flag_y="1.0" ground_desk_height="${ground_height- desktop_height/2}" desktop_length="${desktop_length}" desktop_width="${desktop_width}"/>
+        <xacro:add_desk_legs name="ld" flag_x="-1.0" flag_y="1.0" ground_desk_height="${ground_height- desktop_height/2}" desktop_length="${desktop_length}" desktop_width="${desktop_width}"/>
+        <xacro:add_desk_legs name="ru" flag_x="1.0" flag_y="-1.0" ground_desk_height="${ground_height- desktop_height/2}" desktop_length="${desktop_length}" desktop_width="${desktop_width}"/>
+        <xacro:add_desk_legs name="rd" flag_x="-1.0" flag_y="-1.0" ground_desk_height="${ground_height- desktop_height/2}" desktop_length="${desktop_length}" desktop_width="${desktop_width}"/>
+    </xacro:macro>
+</robot>

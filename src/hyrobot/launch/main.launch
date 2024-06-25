@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="sim" default="true"/>
+    <!--use rviz or not-->
+    <arg name="use_rviz" default="true"/>
+    <!--use moveit or not-->
+    <arg name="use_moveit" default="false"/>
+    <arg name="use_gui" default="false"/>  <!--joint state publisher gui-->
+    <arg name="if_rqt_control" default="false"/>
+
+    <arg name="shoulder_pan_joint" default="0.0"/>
+    <arg name="shoulder_lift_joint" default="-1.5707"/>
+    <arg name="elbow_joint" default="0.0"/>
+    <arg name="wrist_1_joint" default="0.0"/>
+    <arg name="wrist_2_joint" default="0.0"/>
+    <arg name="wrist_3_joint" default="0.0"/>
+
+    
+    <group if="$(arg sim)">
+        <include file="$(dirname)/hyrobot_bringup.launch">
+            <arg name="use_rviz" value="$(arg use_rviz)"/>
+            <arg name="use_moveit" value="$(arg use_moveit)"/>
+            <arg name="gui" value="true"/>
+            <arg name="use_gui" value="$(arg use_gui)"/>
+            <arg name="debug" value="false" />
+            <arg name="if_rqt_control" value="$(arg if_rqt_control)"/>
+            <arg name="shoulder_pan_joint" value="$(arg shoulder_pan_joint)"/>
+            <arg name="shoulder_lift_joint" value="$(arg shoulder_lift_joint)"/>
+            <arg name="elbow_joint" value="$(arg elbow_joint)"/>
+            <arg name="wrist_1_joint" value="$(arg wrist_1_joint)"/>
+            <arg name="wrist_2_joint" value="$(arg wrist_2_joint)"/>
+            <arg name="wrist_3_joint" value="$(arg wrist_3_joint)"/>
+        </include>
+    </group>
+
+    <group unless="$(arg sim)">
+        <remap from="/eff_joint_traj_controller/follow_joint_trajectory" to="/scaled_pos_joint_traj_controller/follow_joint_trajectory"/>
+        <include file="$(dirname)/load_robot_rviz_moveit.launch">
+            <arg name="use_rviz" value="$(arg use_rviz)"/>
+            <arg name="load_robot_description" value="false"/>
+            <arg name="moveit_controller_manager" default="simple" />
+            <arg name="debug" value="false" />
+        </include>
+    </group>
+</launch>

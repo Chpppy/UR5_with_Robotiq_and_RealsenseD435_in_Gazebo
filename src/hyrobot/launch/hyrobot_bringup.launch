@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<launch>
+    <!--config hyrobot in gazebo without MoveIt-->
+    <arg name="world_name" default="world"/>
+    <arg name="gui" default="true"/>    <!--gazebo gui-->
+    <arg name="moveit_controller_manager" value="ros_control"/>
+    <arg name="paused" default="false" doc="Start Gazebo paused"/>
+    <arg name="controllers" default="joint_state_controller eff_joint_traj_controller gripper_controller"/>
+    <arg name="stopped_controllers" default="joint_group_eff_controller"/>
+    <arg name="use_rviz" default="true"/>
+    <arg name="use_gui" default="false"/> <!--joint state publisher gui-->
+    <arg name="use_moveit" default="false"/>
+    <arg name="load_robot_description" default="false"/>
+    <arg name="in_gazebo" default="true"/>
+    <arg name="if_rqt_control" default="false"/>
+    <arg name="debug" default="false" />
+
+    <arg name="shoulder_pan_joint" default="0.0"/>
+    <arg name="shoulder_lift_joint" default="-1.5707"/>
+    <arg name="elbow_joint" default="0.0"/>
+    <arg name="wrist_1_joint" default="0.0"/>
+    <arg name="wrist_2_joint" default="0.0"/>
+    <arg name="wrist_3_joint" default="0.0"/>
+
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(find hyrobot)/urdf/hyrobot_xacro.xacro'"/>
+
+    <!--load controller config file-->
+    <rosparam file="$(find hyrobot)/config/controllers/hyrobot_controllers.yaml" command="load"/>
+    
+    <!--gazebo empty world-->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="paused" value="true"/>
+    </include>
+    
+    <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />
+    
+    <!-- Spawn the model loaded earlier in the simulation just started -->
+    <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
+        args="
+            -urdf
+            -param robot_description
+            -model hyrobot
+            $(arg unpause)
+            -z 0.05
+            -J shoulder_pan_joint $(arg shoulder_pan_joint)
+            -J shoulder_lift_joint $(arg shoulder_lift_joint)
+            -J elbow_joint $(arg elbow_joint)
+            -J wrist_1_joint $(arg wrist_1_joint)
+            -J wrist_2_joint $(arg wrist_2_joint)
+            -J wrist_3_joint $(arg wrist_3_joint)"
+        output="screen" respawn="false" />
+    
+    <!-- Load and start the controllers listed in the 'controllers' arg. -->
+    <node name="ros_control_controller_spawner" pkg="controller_manager" type="spawner"
+        args="$(arg controllers)" output="screen" respawn="false" />
+
+    <!-- Load other controllers, but do not start them -->
+    <node name="ros_control_stopped_spawner" pkg="controller_manager" type="spawner"
+        args="--stopped $(arg stopped_controllers)" output="screen" respawn="false" />
+
+    <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" output="screen" if="$(arg if_rqt_control)"/>
+
+    <!--broadcast tf of base_link-->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_0" args="0 0 1.0 0 0 0 world base_link" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="realsense_world_tf_broadcaster" args="0.5 0 2.2 0 ${pi/2} 0 world d435_bottom_screw_frame" />
+
+    <!--not use moveit-->
+    <include file="$(dirname)/load_robot_rviz.launch" unless="$(arg use_moveit)">
+        <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+        <arg name="use_rviz" value="$(arg use_rviz)"/>
+        <arg name="use_gui" value="$(arg use_gui)"/>
+        <arg name="in_gazebo" value="$(arg in_gazebo)"/>
+    </include>
+    <!--use mobeit-->
+    <include file="$(dirname)/load_robot_rviz_moveit.launch" if="$(arg use_moveit)">
+        <arg name="use_rviz" value="$(arg use_rviz)"/>
+        <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+        <arg name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
+        <arg name="debug" value="$(arg debug)"/>
+    </include>
+        
+</launch>

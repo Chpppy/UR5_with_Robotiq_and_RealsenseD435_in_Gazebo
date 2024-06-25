@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="in_gazebo" default="false"/>
+    <arg name="use_rviz" default="true"/>
+    <arg name="use_gui" default="false"/>
+    <arg name="load_robot_description" default="true"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find hyrobot)/urdf/hyrobot_xacro.xacro'" if="$(arg load_robot_description)"/>
+    <group unless="$(arg in_gazebo)">
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="screen" unless="$(arg use_gui)"/>
+        <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" output="screen" if="$(arg use_gui)"/>
+    </group>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hyrobot)/config/rviz/model.rviz" if="$(arg use_rviz)"/>
+</launch>
