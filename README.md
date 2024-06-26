@@ -39,7 +39,7 @@ Before you use this project, you need to install the following ROS package in ad
 ### Use MoveIt! to manipulate the UR5
 - Use [MoveIt!](https://moveit.github.io/moveit_tutorials/) to plan and execute the trajectory.
 - Use [C++ Interface](https://github.com/moveit/moveit_tutorials/blob/master/doc/move_group_interface/src/move_group_interface_tutorial.cpp) or [Python Interface](https://github.com/moveit/moveit_tutorials/blob/master/doc/move_group_python_interface/scripts/move_group_python_interface_tutorial.py)
-### Use realsense D435
+### Use realsense D435 to get image raw
 - Subscribe the color topic and the depth topic of D435 to get image raw.
 - Align the depth image with the color image.   
     ![Method](Align.png)     
