@@ -2,7 +2,7 @@
 This project is a simulation environment for UR5, robotiq-2f-85, and realsense D435.     
 - ROS Distribution: noeitc(Ubuntu focal-20.04)    
 - Gazebo version: 11     
-## Requriments:   
+## Requirements:   
 Before you use this project, you need to install the following ROS package in advance.   
 - Install MoveIt!:    
     ```
