@@ -6,7 +6,7 @@ This project is a simulation environment for UR5, robotiq-2f-85, and realsense D
 Before you use this project, you need to install the following ROS package in advance.   
 - Install MoveIt!:    
     ```
-    sudo apt updata
+    sudo apt update
     sudo apt install ros-noetic-moveit
     ```
 - Install RViz   
