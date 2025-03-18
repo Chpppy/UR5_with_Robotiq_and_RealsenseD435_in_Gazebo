@@ -30,7 +30,7 @@ Before you use this project, you need to install the following ROS package in ad
     catkin_make
     source devel/setup.bash
     ```
-    If you've encountered the error of ```Imported target "dart" includes non-existent path```,  just ```catkin_make``` again.
+    If you've encountered the error in ```Imported target "dart" includes non-existent path```,  just ```catkin_make``` again.
 
 - Run the code with ROS and Gazebo.     
     ```
