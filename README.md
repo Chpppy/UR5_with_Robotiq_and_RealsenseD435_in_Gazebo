@@ -22,7 +22,7 @@ Before you use this project, you need to install the following ROS package in ad
     ```
     mkdir -p ~/ur_ws/src
     cd ~/ur_ws/src
-    git clone https://github.com/chpppy/UR5_with_Robotiq_and_RealsenseD435_in_Gazebo.git    
+    git clone https://github.com/chpppy/UR5_with_Robotiq_and_RealsenseD435_in_Gazebo.git
     ```
 - Build the code under `~/ur_ws/`    
     ```
@@ -30,6 +30,7 @@ Before you use this project, you need to install the following ROS package in ad
     catkin_make
     source devel/setup.bash
     ```
+    If you've encountered the error of ```Imported target "dart" includes non-existent path```,  just ```catkin_make``` again.
 
 - Run the code with ROS and Gazebo.     
     ```
