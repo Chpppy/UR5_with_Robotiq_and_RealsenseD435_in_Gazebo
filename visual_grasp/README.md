@@ -1,4 +1,4 @@
-There is a script for using realsense in gazebo to get a pointcloud scene.
+There is a script for using realsense in gazebo to get a pointcloud scene.  
 You need install the python dependencies:
 |dependencies|
 | :---: |
