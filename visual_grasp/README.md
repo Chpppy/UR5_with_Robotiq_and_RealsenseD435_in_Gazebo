@@ -6,3 +6,5 @@ You need install the python dependencies:
 |open3d==0.13.0|
 |cv_bridge==1.16.2|
 |pandas==2.0.3|
+
+You can use ```rostopic echo /d435/depth/camera_info``` to get camera intrinsics.
